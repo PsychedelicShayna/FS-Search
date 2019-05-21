@@ -219,16 +219,20 @@ int main(int argc, char* argv[]) {
                 ++files_checked;
                 std::vector<std::string> matched_patterns;
 
-                if(std::any_of(settings.ContentPatterns.begin(), settings.ContentPatterns.end(), [&file_contents, &matched_patterns](const std::string& pattern){
-                    if(file_contents.find(pattern) != std::string::npos) {
-                        matched_patterns.emplace_back(pattern);
-                        return true;
-                    } else {
-                        return false;
+                if([&settings, &file_contents, &matched_patterns]() -> bool{
+                    bool satisfied = false;
+
+                    for(const auto& pattern : settings.ContentPatterns) {
+                        if(file_contents.find(pattern) != std::string::npos) {
+                            matched_patterns.emplace_back(pattern);
+                            satisfied = true;
+                        }
                     }
-                })) {
+
+                    return satisfied;
+                }()) {
                     matches.emplace_back(std::make_pair(entry.path().string(), matched_patterns));
-                };
+                }
             }
         } catch(const std::exception& exception) {
             exceptions.emplace_back(std::make_pair(entry.path().string(), exception.what()));
