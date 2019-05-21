@@ -9,7 +9,7 @@ link_arguments = -std=c++17	-DWINDOWS
 
 cafind.exe: $(objects)
 	mkdir -p builds
-	clang++ $(objects) -o builds/cafind.exe $(link_arguments) 
+	clang++ $(objects) -o builds/fsearch.exe $(link_arguments) 
 
 
 objects/main.o: source/main.cxx
